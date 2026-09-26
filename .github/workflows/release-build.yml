@@ -281,8 +281,8 @@ jobs:
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.read_build_env.outputs.FULL_VERSION }}
-          name: Release ${{ steps.read_build_env.outputs.FULL_VERSION }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || steps.read_build_env.outputs.FULL_VERSION }}
+          name: Release ${{ github.ref_type == 'tag' && github.ref_name || steps.read_build_env.outputs.FULL_VERSION }}
           draft: false
           prerelease: false
           generate_release_notes: true
