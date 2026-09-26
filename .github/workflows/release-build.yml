@@ -31,28 +31,6 @@ jobs:
       - name: Generate Version Number
         id: generate_version
         run: |
-          # 标签触发 (e.g. v1.0或1.0) 移除 refs/tags/ 前缀和可选的 'v' 前缀
-          if [[ ${{ github.ref }} == refs/tags/* ]]; then
-            TAG_VERSION=$(echo ${{ github.ref }} | sed -E 's/^refs\/tags\/(v)?//')
-            echo "This is a tag release: $TAG_VERSION"
-          
-          # 分支触发 (e.g. main或feature/new-feature) 移除 refs/heads/ 前缀
-          elif [[ ${{ github.ref }} == refs/heads/* ]]; then
-            TAG_VERSION=$(echo ${{ github.ref }} | sed -E 's/^refs\/heads\///' | sed 's/\//-/g')
-            echo "This is a branch push: $TAG_VERSION"
-          
-          # Pull Request触发 (e.g. pr-123) 提取PR的编号 pr-<number>
-          elif [[ ${{ github.ref }} == refs/pull/* ]]; then
-            PR_NUMBER=$(echo ${{ github.ref }} | sed -E 's/^refs\/pull\/([0-9]+)\/merge$/\1/')
-            TAG_VERSION="pr-$PR_NUMBER"
-            echo "This is a Pull Request: $TAG_VERSION"
-          
-          # 其他情况：直接使用 github.ref 的值 包含任何 "/"会被替换为 "-"
-          else
-            TAG_VERSION=$(echo ${{ github.ref }} | sed 's/\//-/g')
-            echo "This is another trigger: $TAG_VERSION"
-          fi
-          echo "TAG_VERSION=$TAG_VERSION" 
           COMMIT_COUNT=$(git rev-list --count HEAD) # 计算提交数量
           SHORT_HASH=$(git rev-parse --short HEAD) # 获取最近一次提交的短哈希
           BUILD_VERSION="${COMMIT_COUNT}" # 组合成完整的构建版本号
